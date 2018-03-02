@@ -1,0 +1,22 @@
+FROM php:7.1-fpm
+
+MAINTAINER frops
+
+RUN mkdir /app
+WORKDIR /app
+
+RUN apt-get update
+RUN apt-get dist-upgrade -y
+
+RUN DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:no1wantdthisname/ppa
+RUN apt-get update
+
+RUN apt-get install libfreetype6 libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev
+RUN docker-php-ext-install pdo pdo_mysql gd mysqli mbstring
+
+ADD . /app
+
+RUN curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/bin/ --filename=composer
+
+EXPOSE 80
